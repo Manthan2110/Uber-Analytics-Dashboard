@@ -1,4 +1,4 @@
-# 🚖 Uber Business Intelligence Dashboard – Power BI  
+# 🚖 Uber Analytics Dashboard 
 *“Transforming ride-hailing data into actionable mobility insights.”* 📊🚗  
 
 The **Uber BI Dashboard** is an **advanced Power BI analytics project** designed to analyze **ride behavior, customer patterns, cancellations, route performance, distance metrics, and revenue efficiency** for a ride-hailing platform like Uber.  
