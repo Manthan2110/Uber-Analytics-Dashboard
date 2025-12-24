@@ -73,12 +73,13 @@ Uber Ride Dataset
 ---
 
 ## 📁 Project Structure
-| File / Folder         | Description                     |
-| --------------------- | ------------------------------- |
-| `Report/`             | Main Power BI dashboard file    |
-| `Dataset/`            | Uber ride dataset (CSV / Excel) |
-| `Uber_Dashboard.pdf`  | Dashboard preview in pdf form   |
-| `README.md`           | Project documentation           |
+| File / Folder             | Description                     |
+| --------------------------| ------------------------------- |
+| `Report/`                 | Main Power BI dashboard file    |
+| `Dataset/`                | Uber ride dataset (CSV / Excel) |
+| `Uber Portfolio Website/` | Folder of All files of Website  |
+| `Uber_Dashboard.pdf`      | Dashboard preview in pdf form   |
+| `README.md`               | Project documentation           |
 
 ---
 
