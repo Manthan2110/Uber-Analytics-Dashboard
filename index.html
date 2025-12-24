@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* Theme variables: light by default, dark when `data-theme="dark"` is set on <html> */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --background-color: #f4f6f7;
+            --text-color: #2c3e50;
+            --accent-color: #1175d8;
+            --surface-bg: #ffffff;
+            --header-bg: #f9f9f9;
+            --muted-text: #666666;
+            --card-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            --download-hover: #0f59ad;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #e6eef8;
+            --secondary-color: #c9d6e6;
+            --background-color: #0b1220;
+            --text-color: #e6eef8;
+            --accent-color: #1e90ff;
+            --surface-bg: #0f1724;
+            --header-bg: #0f1724;
+            --muted-text: #a0aec0;
+            --card-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            --download-hover: #1563c6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Profile Section */
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        .profile-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+
+        /* Dashboard Section */
+        .dashboard-container {
+            background-color: var(--surface-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .dashboard-iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+
+        /* Sections */
+        .section {
+            background-color: var(--surface-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-bg);
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .section-toggle {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .section-content.active {
+            max-height: 500px;
+            padding: 20px;
+        }
+
+        .section-content p, ul {
+            color: var(--secondary-color);
+        }
+
+        /* Download Button */
+        .download-button {
+            display: block;
+            margin: 40px auto 0;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: #fff;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.15s ease;
+        }
+
+        .download-button:hover {
+            background-color: var(--download-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .profile-name {
+                font-size: 2rem;
+            }
+
+            .dashboard-iframe {
+                height: 450px;
+                width: 400;
+            }
+        }
+
+
+        .theme-toggle {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+        }
+
+        .switch {
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            position: relative;
+        }
+
+        .switch input { display: none; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: linear-gradient(180deg, #e6e6e6, #d0d0d0);
+            border-radius: 999px;
+            transition: background 0.2s ease;
+        }
+
+        .slider:after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .switch input:checked + .slider {
+            background: linear-gradient(180deg, var(--accent-color), #0a6fd6);
+        }
+
+        .switch input:checked + .slider:after {
+            transform: translateX(24px);
+        }
+
+        /* Skills Section */
+        .skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.skill-card {
+    background-color: var(--surface-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 250px;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(137, 137, 137, 0.2);
+}
+
+.skill-card .icon {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.skill-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.skill-card p {
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+
+
+    .social-links {
+      display: flex;
+      gap: 20px;
+    }
+    .social-links a {
+      text-decoration: none;
+      color: #fff;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .social-links a:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .instagram { background-color: #E1306C; }
+    .linkedin { background-color: #0077B5; }
+    .github { background-color: #333; }
+    .gmail { background-color: #D14836; }
+    .social-links i {
+      font-size: 24px;
+    }
+
+    .social-section
+    {
+        display: flex;
+        justify-content: center;
+ 
+    }
+
+    </style>
+</head>
+    <body>
+    <div class="container">
+        <div class="theme-toggle" title="Toggle dark mode">
+            <label class="switch">
+                <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <!-- Profile Section -->
+        <div class="profile">
+            <img src="/Manthan_pfp.jpg" alt="Profile Picture" class="profile-image">
+            <h1 class="profile-name">Manthan Jadav</h1>
+            <p class="profile-title">Uber Analytics Dashboard</p>
+        </div>
+
+       
+
+        <!-- Dashboard Section -->
+        <!-- Paste Publish Report URL here -->
+        <div class="dashboard-container">
+            <iframe 
+                class="dashboard-iframe" 
+                src="https://app.powerbi.com/reportEmbed?reportId=08de0b87-b268-48a4-8d46-a4946d1fa23a&autoAuth=true&ctid=23b0daf1-173a-4a20-afa0-36d69a739904"  
+                title="Uber Analytics Dashboard"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📊 Overview Page</h2>
+                <div class="section-toggle">+</div>
+            </div>
+            <div class="section-content">
+                <p>The Overview page presents a high-level snapshot of Uber’s overall performance.
+                It highlights key KPIs such as total bookings, cancellation rate, completion rate,
+                revenue efficiency, and average ride distance, enabling stakeholders to quickly 
+                assess platform health and operational efficiency across different time periods 
+                and filters.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">💰 Revenue Page</h2>
+                <div class="section-toggle">+</div>
+            </div>
+            <div class="section-content">
+                <p>The Revenue page focuses on financial performance and monetization efficiency.
+                It analyzes revenue trends over time, revenue by vehicle type and payment method, 
+                and efficiency metrics such as revenue per booking. This page helps understand 
+                how demand converts into revenue and which factors contribute most to business growth.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">👤 Rider Page</h2>
+                <div class="section-toggle">+</div>
+            </div>
+            <div class="section-content">
+                <ul>
+                    <p>The Rider page analyzes customer behavior and engagement patterns.
+                    It provides insights into first-time riders, returning riders, and regular riders,
+                    along with customer retention metrics and rider-side cancellation behavior.
+                    This page helps evaluate customer loyalty, ride frequency, and user experience quality.</p>
+                </ul>
+            </div>
+        </div>
+        
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">📍 Location Page</h2>
+                <div class="section-toggle">+</div>
+            </div>
+            <div class="section-content">
+                <p>The Location page delivers geographical and route-level insights.
+                It examines pickup and drop location performance, identifies top routes 
+                by distance, and measures their contribution to total revenue.
+                This page is designed to support route optimization, demand planning, 
+                and identification of high-impact locations.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">🚘 Vehicle Page</h2>
+                <div class="section-toggle">+</div>
+            </div>
+            <div class="section-content">
+                <p>The Vehicle page focuses on vehicle utilization and performance analysis.
+                It compares ride distance, bookings, and contribution across different vehicle types 
+                such as Auto, Bike, Sedan, and XL.
+                This page helps assess fleet efficiency and demand distribution across vehicle categories.</p>
+            </div>
+        </div>
+
+           <!-- Download Project Button -->
+           <a href="/Uber_Dashboard.pdf" download="Uber-Analytics-Dashboard.pdf" class="download-button">Download Project PDF</a>
+ 
+
+          <!-- Expandable Sections -->
+
+<!-- Technical Skills Section -->
+<section id="skills" style="padding: 2rem 0;">
+    <div class="container">
+      <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Skill Used</h2>
+      <div class="skills-grid">
+        <!-- Skill Card 1 -->
+        <div class="skill-card">
+          <div class="icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <h3>SQL</h3>
+          <p>Data querying and database management</p>
+        </div>
+        <!-- Skill Card 2 -->
+        <div class="skill-card">
+          <div class="icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3>Power BI</h3>
+          <p>Data visualization and dashboards</p>
+        </div>
+        <!-- Skill Card 3 -->
+        <div class="skill-card">
+          <div class="icon">
+            <i class="fab fa-figma"></i>
+          </div>
+          <h3>Figma</h3>
+          <p>Design Theme and elements</p>
+        </div>
+        <!-- Skill Card 4 -->
+        <!-- <div class="skill-card">
+          <div class="icon">
+            <i class="fab fa-html5"></i>
+          </div>
+          <h3>HTML & CSS</h3>
+          <p>Web design and front-end development</p>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <div class="social-section">
+    
+    <div class="social-links">
+
+        <a href="https://www.linkedin.com/in/manthanjadav/" class="linkedin" target="_blank" title="LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://github.com/Manthan2110" class="github" target="_blank" title="GitHub">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="mailto:manthanjadav746@gmail.com" class="gmail" title="Gmail">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </div>
+    
+
+  </div>
+ 
+
+        </div>
+
+    <script>
+        // Theme init + accordion sections
+        (function () {
+            const THEME_KEY = 'theme';
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+            }
+
+            // Determine initial theme: prefer saved, then system, then light
+            const saved = localStorage.getItem(THEME_KEY);
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initial = saved || (prefersDark ? 'dark' : 'light');
+            applyTheme(initial);
+
+            // Sync switch UI
+            document.addEventListener('DOMContentLoaded', () => {
+                const themeSwitch = document.getElementById('theme-switch');
+                if (themeSwitch) {
+                    themeSwitch.checked = ( (saved || (prefersDark ? 'dark' : 'light')) === 'dark');
+                    themeSwitch.addEventListener('change', (e) => {
+                        const t = e.target.checked ? 'dark' : 'light';
+                        applyTheme(t);
+                        localStorage.setItem(THEME_KEY, t);
+                    });
+                }
+
+                // Re-use existing accordion logic
+                const sections = document.querySelectorAll('.section');
+                sections.forEach(section => {
+                    const header = section.querySelector('.section-header');
+                    const content = section.querySelector('.section-content');
+                    const toggle = section.querySelector('.section-toggle');
+
+                    header.addEventListener('click', () => {
+                        // Close other sections
+                        sections.forEach(otherSection => {
+                            if (otherSection !== section) {
+                                otherSection.querySelector('.section-content').classList.remove('active');
+                                otherSection.querySelector('.section-toggle').textContent = '+';
+                            }
+                        });
+
+                        // Toggle current section
+                        content.classList.toggle('active');
+                        toggle.textContent = content.classList.contains('active') ? '−' : '+';
+                    });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
